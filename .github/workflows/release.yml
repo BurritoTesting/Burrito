@@ -23,7 +23,7 @@ jobs:
           pwd
 
       - name: Get the repository state
-        uses: ./.github/workflows/main.yml
+        uses: ./.github/workflows/main
         id: main-build
 
       - name: Download all available artifacts
