@@ -17,6 +17,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Listfiles
+        run: tree
+
       - name: Get the repository state
         uses: ./.github/workflows/main.yml
         id: main-build
