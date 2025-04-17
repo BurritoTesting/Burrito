@@ -55,6 +55,7 @@ jobs:
             const githubToken = process.env.GITHUB_TOKEN;
 
             console.log(`Creating release with tag: ${tag}`);
+            console.log(`using ${context.repo.owner} and ${context.repo.repo}`);
 
             const release = await github.rest.repos.createRelease({
               owner: context.repo.owner,
