@@ -18,9 +18,11 @@ jobs:
       - uses: actions/checkout@v4
         with:
           sparse-checkout: .github
+
       - name: Get the repository state
-        uses: ./.github/actions/repo-state
-        id: repo-state
+        uses: ./.github/actions/main.yml
+        id: main-build
+
       - name: Download all available artifacts
         uses: actions/download-artifact@v4
       - name: Handle manually entered release message if it exists
