@@ -16,8 +16,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          sparse-checkout: .github
 
       - name: Get the repository state
         uses: ./.github/actions/main.yml
