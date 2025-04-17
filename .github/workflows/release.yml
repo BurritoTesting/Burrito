@@ -12,6 +12,9 @@ on:
         type: string
 
 jobs:
+  call-build:
+    uses: ./.github/workflows/main.yml
+
   publish:
     runs-on: ubuntu-latest
     steps:
@@ -22,9 +25,9 @@ jobs:
           tree .github
           pwd
 
-      - name: Get the repository state
-        uses: ./.github/workflows/main
-        id: main-build
+      #- name: Get the repository state
+      #  uses: ./.github/workflows/main
+      #  id: main-build
 
       - name: Download all available artifacts
         uses: actions/download-artifact@v4
