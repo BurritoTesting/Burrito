@@ -1,7 +1,7 @@
 name: publish
 
 on:
-  workflow_call:
+  workflow_dispatch:
     inputs:
       artifact-name:
         required: true
