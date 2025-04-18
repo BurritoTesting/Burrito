@@ -75,7 +75,7 @@ jobs:
           mkdir -v -p build
           cd build
           cmake ..
-          make
+          make -j $(nproc)
 
       - name: Validate xml_converter
         run: |
