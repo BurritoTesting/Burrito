@@ -291,6 +291,11 @@ jobs:
           mv d3d11.dll burrito_link/
           mv arcdps_burrito_link.dll burrito_link/
 
+      - name: Mark linux executables as executable
+        run: |
+          chmod +x burrito.x86_64
+          chmod +x xml_converter
+
       - uses: actions/upload-artifact@v4
         with:
           # Artifact name
