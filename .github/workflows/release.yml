@@ -65,7 +65,7 @@ jobs:
 
             console.log(`Creating release with tag: ${tag}`);
             console.log(`using ${context.repo.owner} and ${context.repo.repo}`);
-            console.log(`Found the release mode ${github.context.payload.inputs.release_type}`);
+            console.log(`Found the release mode ${context.payload.inputs.release_type}`);
 
             const release = await github.rest.repos.createRelease({
               owner: context.repo.owner,
