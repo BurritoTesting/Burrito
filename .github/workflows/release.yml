@@ -3,7 +3,7 @@ name: publish
 on:
   workflow_dispatch:
     inputs:
-      release-type:
+      release_type:
         type: choice
         description: "burrito (Minor Release)"
         default: "burrito-next"
@@ -13,48 +13,43 @@ on:
         required: true
 
 jobs:
-  #call-build:
-  #  uses: ./.github/workflows/main.yml
+  call-build:
+   uses: ./.github/workflows/main.yml
 
   publish:
-    #needs: call-build
+    needs: call-build
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
       - uses: actions/checkout@v4
 
-      # - name: Download Burrito Package
-      #   uses: actions/download-artifact@v4
-      #   # This is failing for some reason
-      #   #with:
-      #   #  name: Burrito_Linux
-
-      # - name: Get the repository state
-      #  uses: ./.github/workflows/main
-      #  id: main-build
+      - name: Download Burrito Package
+        uses: actions/download-artifact@v4
+        # This is failing for some reason
+        #with:
+        #  name: Burrito_Linux
 
       - name: Generate a random name
         id: version_number
         run: |
           UUID=$(uuidgen)
-          echo "VERSION_NUMBER=zipped-${UUID}.zip" >> "$GITHUB_ENV"
-          echo "version_number=zipped-${UUID}.zip" >> "$GITHUB_OUTPUT"
+          echo "VERSION_NUMBER=${UUID}" >> "$GITHUB_ENV"
+          echo "version_number=${UUID}" >> "$GITHUB_OUTPUT"
 
-      # - name: Zip up the download
+      - name: Zip up the download
+        run: |
+          zip -r downloaded-artifact/burrito-"$VERSION_NUMBER" Burrito_Linux
+
+      # - name: Listfiles
       #   run: |
-      #     zip -r burrito-"$VERSION_NUMBER" Burrito_Linux
+      #     tree .
+      #     pwd
 
-      - name: Listfiles
-        run: |
-          tree .
-          pwd
-
-
-      - name: Create a fake artifact
-        run: |
-          mkdir -p "downloaded-artifact"
-          echo "Hello World" > downloaded-artifact/my_special_artifact.zip
+      # - name: Create a fake artifact
+      #   run: |
+      #     mkdir -p "downloaded-artifact"
+      #     echo "Hello World" > downloaded-artifact/my_special_artifact.zip
 
       - name: Upload a new release
         uses: actions/github-script@v7
@@ -69,6 +64,7 @@ jobs:
 
             console.log(`Creating release with tag: ${tag}`);
             console.log(`using ${context.repo.owner} and ${context.repo.repo}`);
+            console.log(`Found the release mode ${github.context.payload.inputs.release_type}`);
 
             const release = await github.rest.repos.createRelease({
               owner: context.repo.owner,
