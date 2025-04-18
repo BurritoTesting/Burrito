@@ -3,13 +3,14 @@ name: publish
 on:
   workflow_dispatch:
     inputs:
-      artifact-name:
+      release-type:
+        type: choice
+        description: "burrito (Minor Release)"
+        default: "burrito-next"
+        options:
+        - burrito-next (Preview build)
+        - burrito (Minor Release)
         required: true
-        type: string
-      release-message:
-        type: string
-      checksum:
-        type: string
 
 jobs:
   call-build:
