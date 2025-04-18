@@ -39,6 +39,7 @@ jobs:
 
       - name: Zip up the download
         run: |
+          mkdir -p "downloaded-artifact"
           zip -r downloaded-artifact/burrito-"$VERSION_NUMBER" Burrito_Linux
 
       # - name: Listfiles
