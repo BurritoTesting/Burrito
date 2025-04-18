@@ -71,13 +71,15 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               tag_name: tag,
-              name: tag,
+              name: "Burrito" tag,
               body: "Automated release",
               draft: true,
               prerelease: false,
             });
 
             const releaseId = release.data.id;
+
+            console.log(`found release id ${releaseId}`);
 
             // 2. Upload assets
             const dir = 'downloaded-artifact';
