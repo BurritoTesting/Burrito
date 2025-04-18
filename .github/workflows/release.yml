@@ -13,22 +13,22 @@ on:
         required: true
 
 jobs:
-  call-build:
-    uses: ./.github/workflows/main.yml
+  #call-build:
+  #  uses: ./.github/workflows/main.yml
 
   publish:
-    needs: call-build
+    #needs: call-build
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
       - uses: actions/checkout@v4
 
-      - name: Download Burrito Package
-        uses: actions/download-artifact@v4
-        # This is failing for some reason
-        #with:
-        #  name: Burrito_Linux
+      # - name: Download Burrito Package
+      #   uses: actions/download-artifact@v4
+      #   # This is failing for some reason
+      #   #with:
+      #   #  name: Burrito_Linux
 
       # - name: Get the repository state
       #  uses: ./.github/workflows/main
@@ -41,9 +41,9 @@ jobs:
           echo "VERSION_NUMBER=zipped-${UUID}.zip" >> "$GITHUB_ENV"
           echo "version_number=zipped-${UUID}.zip" >> "$GITHUB_OUTPUT"
 
-      - name: Zip up the download
-        run: |
-          zip -r burrito-"$VERSION_NUMBER" Burrito_Linux
+      # - name: Zip up the download
+      #   run: |
+      #     zip -r burrito-"$VERSION_NUMBER" Burrito_Linux
 
       - name: Listfiles
         run: |
@@ -63,7 +63,7 @@ jobs:
             const fs = require('fs');
             const path = require('path');
 
-            const tag = "${{ steps.version_number.outputs.version_number }};
+            const tag = "${{ steps.version_number.outputs.version_number }}";
 
             const githubToken = process.env.GITHUB_TOKEN;
 
