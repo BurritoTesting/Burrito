@@ -1,4 +1,4 @@
-name: publish
+honame: publish
 
 on:
   workflow_dispatch:
@@ -36,12 +36,13 @@ jobs:
           next_version="$major.$minor.$patch"
           echo "here"
           timestamp=$(TZ="America/Chicago" date +"%Y%m%d%H%M%S")
+          echo "here 2.1"
           # Other Timezones
           # TZ="America/New_York" date +"%Y%m%d%H%M%S"
           # TZ="America/Chicago" date +"%Y%m%d%H%M%S"
           # TZ="America/Denver" date +"%Y%m%d%H%M%S"
           # TZ="America/Los_Angeles" date +"%Y%m%d%H%M%S"
-          
+          echo "here2.4"
           burrito_next_tag_without_build_suffix="burrito-next-${next_version}-${timestamp}${build_suffix}"
           burrito_next_versions=$(echo "$tags" | grep "$burrito_next_tag_without_build_suffix")
           echo "here2"
