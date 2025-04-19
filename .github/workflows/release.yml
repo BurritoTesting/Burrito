@@ -110,13 +110,13 @@ jobs:
 
       - name: Versions
         run: |
-          echo ${{ needs.get_version.outputs.version_tag }}
-          echo ${{ needs.get_version.outputs.release_name }}
+          echo "${{ needs.get_version.outputs.version_tag }}"
+          echo "${{ needs.get_version.outputs.release_name }}"
 
-          echo ${{ needs.get_version.outputs.build_type }}
-          echo ${{ needs.get_version.outputs.major_version }}
-          echo ${{ needs.get_version.outputs.minor_version }}
-          echo ${{ needs.get_version.outputs.patch_version }}
+          echo "${{ needs.get_version.outputs.build_type }}"
+          echo "${{ needs.get_version.outputs.major_version }}"
+          echo "${{ needs.get_version.outputs.minor_version }}"
+          echo "${{ needs.get_version.outputs.patch_version }}"
 
       - name: Generate a random name
         id: version_number
@@ -128,7 +128,7 @@ jobs:
       - name: Zip up the download
         run: |
           mkdir -p "downloaded-artifact"
-          zip -r downloaded-artifact/${{ needs.get_version.outputs.version_tag }} Burrito_Linux
+          zip -r "downloaded-artifact/${{ needs.get_version.outputs.version_tag }}" Burrito_Linux
 
       # - name: Listfiles
       #   run: |
