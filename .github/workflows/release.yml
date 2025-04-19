@@ -22,6 +22,7 @@ jobs:
       major_version: ${{ steps.get-version-tags.outputs.major_version }}
       minor_version: ${{ steps.get-version-tags.outputs.minor_version }}
       patch_version: ${{ steps.get-version-tags.outputs.patch_version }}
+      prerelease: ${{ steps.get-version-tags.outputs.prerelease }}
     steps:
       - name: Get Version Tags
         id: get-version-tags
@@ -72,6 +73,7 @@ jobs:
               echo "major_version=${major}" >> $GITHUB_OUTPUT
               echo "minor_version=${minor}" >> $GITHUB_OUTPUT
               echo "patch_version=${patch}" >> $GITHUB_OUTPUT
+              echo "prerelease=false" >> $GITHUB_OUTPUT
               ;;
             "burrito-next (Preview build)")
               echo "version_tag=${burrito_next_tag_without_build_suffix}${build_suffix}" >> $GITHUB_OUTPUT
@@ -80,6 +82,7 @@ jobs:
               echo "major_version=${major}" >> $GITHUB_OUTPUT
               echo "minor_version=${minor}" >> $GITHUB_OUTPUT
               echo "patch_version=${combined_patch_number}" >> $GITHUB_OUTPUT
+              echo "prerelease=true" >> $GITHUB_OUTPUT
               ;;
             *)
               echo "Error: Unknown release type '$MY_INPUT_VAR'"
@@ -161,6 +164,7 @@ jobs:
 
             const tag = "${{ needs.get_version.outputs.version_tag }}";
             const name = "${{ needs.get_version.outputs.release_name }}";
+            const prerelease = "${{ needs.get_version.outputs.prerelease }}" == "true";
 
             const githubToken = process.env.GITHUB_TOKEN;
 
@@ -176,7 +180,7 @@ jobs:
               body: "A new Automated release",
               target_commitish: '${{ github.sha }}',
               draft: true,
-              prerelease: false,
+              prerelease: prerelease,
             });
 
             const releaseId = release.data.id;
