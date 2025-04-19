@@ -56,7 +56,7 @@ jobs:
           build_suffix=$(printf %02d $build_count)
           combined_patch_number=$((patch * 10000000000000000 + timestamp * 100 + build_count))
 
-          release_type="${{ github.event.inputs.version }}"
+          release_type="${{ github.event.inputs.release_type }}"
           case "$release_type" in
             "burrito (Minor Release)")
               echo "version_tag=burrito-${next_version}" >> $GITHUB_OUTPUT
