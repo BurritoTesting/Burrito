@@ -49,7 +49,7 @@ jobs:
           # TZ="America/Denver" date +"%Y%m%d%H%M%S"
           # TZ="America/Los_Angeles" date +"%Y%m%d%H%M%S"
           
-          burrito_next_tag_without_build_suffix="burrito-next-${next_version}-${timestamp}${build_suffix}"
+          burrito_next_tag_without_build_suffix="burrito-next-${next_version}-${timestamp}"
           burrito_next_versions=$(echo "$tags" | grep "$burrito_next_tag_without_build_suffix" | cat)
           
           build_count=$(echo -n "$burrito_next_versions" | wc -l)
@@ -67,8 +67,8 @@ jobs:
               echo "patch_version=${patch}" >> $GITHUB_OUTPUT
               ;;
             "burrito-next (Preview build)")
-              echo "version_tag=burrito-next-${next_version}" >> $GITHUB_OUTPUT
-              echo "release_name=Burrito-next ${next_version}" >> $GITHUB_OUTPUT
+              echo "version_tag=${burrito_next_tag_without_build_suffix}${build_suffix}" >> $GITHUB_OUTPUT
+              echo "release_name=Burrito-next ${next_version} (${timestamp}${build_suffix})" >> $GITHUB_OUTPUT
               echo "build_type=burrito-next" >> $GITHUB_OUTPUT
               echo "major_version=${major}" >> $GITHUB_OUTPUT
               echo "minor_version=${minor}" >> $GITHUB_OUTPUT
@@ -79,7 +79,6 @@ jobs:
               return 1 2>/dev/null || exit 1
               ;;
           esac
-
 
           # echo "Burrito Version Tag: burrito-${next_version}"
           # echo "Burrito Release Name: Burrito ${next_version}"
@@ -129,7 +128,7 @@ jobs:
       - name: Zip up the download
         run: |
           mkdir -p "downloaded-artifact"
-          zip -r downloaded-artifact/burrito-"$VERSION_NUMBER" Burrito_Linux
+          zip -r downloaded-artifact/${{ needs.get_version.outputs.version_tag }} Burrito_Linux
 
       # - name: Listfiles
       #   run: |
@@ -153,7 +152,8 @@ jobs:
             const fs = require('fs');
             const path = require('path');
 
-            const tag = "${{ steps.version_number.outputs.version_number }}";
+            const tag = "${{ needs.get_version.outputs.version_tag }}";
+            const name = "${{ needs.get_version.outputs.release_name }}";
 
             const githubToken = process.env.GITHUB_TOKEN;
 
@@ -165,7 +165,7 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               tag_name: tag,
-              name: "Burrito " + tag,
+              name: name,
               body: "A new Automated release",
               target_commitish: '${{ github.sha }}',
               draft: true,
