@@ -56,19 +56,37 @@ jobs:
           build_suffix=$(printf %02d $build_count)
           combined_patch_number=$((patch * 10000000000000000 + timestamp * 100 + build_count))
 
-          echo "version_tag=burrito-${next_version}" >> $GITHUB_OUTPUT
-          echo "release_name=Burrito ${next_version}" >> $GITHUB_OUTPUT
-          echo "build_type=burrito" >> $GITHUB_OUTPUT
-          echo "major_version=${major}" >> $GITHUB_OUTPUT
-          echo "minor_version=${minor}" >> $GITHUB_OUTPUT
-          echo "patch_version=${patch}" >> $GITHUB_OUTPUT
+          release_type="${{ github.event.inputs.version }}"
+          case "$release_type" in
+            "burrito (Minor Release)")
+              echo "version_tag=burrito-${next_version}" >> $GITHUB_OUTPUT
+              echo "release_name=Burrito ${next_version}" >> $GITHUB_OUTPUT
+              echo "build_type=burrito" >> $GITHUB_OUTPUT
+              echo "major_version=${major}" >> $GITHUB_OUTPUT
+              echo "minor_version=${minor}" >> $GITHUB_OUTPUT
+              echo "patch_version=${patch}" >> $GITHUB_OUTPUT
+              ;;
+            "burrito-next (Preview build)")
+              echo "version_tag=burrito-next-${next_version}" >> $GITHUB_OUTPUT
+              echo "release_name=Burrito-next ${next_version}" >> $GITHUB_OUTPUT
+              echo "build_type=burrito-next" >> $GITHUB_OUTPUT
+              echo "major_version=${major}" >> $GITHUB_OUTPUT
+              echo "minor_version=${minor}" >> $GITHUB_OUTPUT
+              echo "patch_version=${combined_patch_number}" >> $GITHUB_OUTPUT
+              ;;
+            *)
+              echo "Error: Unknown release type '$MY_INPUT_VAR'"
+              return 1 2>/dev/null || exit 1
+              ;;
+          esac
+
 
           # echo "Burrito Version Tag: burrito-${next_version}"
           # echo "Burrito Release Name: Burrito ${next_version}"
-          echo "Burrito Embedded Versions: ${major} ${minor} ${patch}"
-          echo "Burrito Next Version Tag: ${burrito_next_tag_without_build_suffix}${build_suffix}"
-          echo "Burrito Next Version Tag: Burrito-next ${next_version} (${timestamp}${build_suffix})"
-          echo "Burrito Next Embedded Versions: ${major} ${minor} ${combined_patch_number}"
+          # echo "Burrito Embedded Versions: ${major} ${minor} ${patch}"
+          # echo "Burrito Next Version Tag: ${burrito_next_tag_without_build_suffix}${build_suffix}"
+          # echo "Burrito Next Version Tag: Burrito-next ${next_version} (${timestamp}${build_suffix})"
+          # echo "Burrito Next Embedded Versions: ${major} ${minor} ${combined_patch_number}"
 
 
   call_build:
