@@ -118,31 +118,19 @@ jobs:
         #with:
         #  name: Burrito_Linux
 
-      - name: ls files
+      # Download artifact strips executable bits. We need a better solution
+      # but for now manually re-adding the bits will work.
+      # https://github.com/actions/download-artifact/issues/14
+      - name: Fix Executable Bits
         run: |
-          ls -al Burrito_Linux/
-
-      - name: Versions
-        run: |
-          echo "${{ needs.get_version.outputs.version_tag }}"
-          echo "${{ needs.get_version.outputs.release_name }}"
-
-          echo "${{ needs.get_version.outputs.build_type }}"
-          echo "${{ needs.get_version.outputs.major_version }}"
-          echo "${{ needs.get_version.outputs.minor_version }}"
-          echo "${{ needs.get_version.outputs.patch_version }}"
-
-      - name: Generate a random name
-        id: version_number
-        run: |
-          UUID=$(uuidgen)
-          echo "VERSION_NUMBER=${UUID}" >> "$GITHUB_ENV"
-          echo "version_number=${UUID}" >> "$GITHUB_OUTPUT"
+          chmod +x burrito.x86_64
+          chmod +x xml_converter
 
       - name: Zip up the download
         run: |
           mkdir -p "downloaded-artifact"
-          zip -r "downloaded-artifact/${{ needs.get_version.outputs.version_tag }}.zip" Burrito_Linux/*
+          cd Burrito_Linux
+          zip -r "../downloaded-artifact/${{ needs.get_version.outputs.version_tag }}.zip" .
 
       - name: Upload a new release
         uses: actions/github-script@v7
