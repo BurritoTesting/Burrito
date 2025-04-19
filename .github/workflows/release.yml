@@ -58,7 +58,7 @@ jobs:
           echo "Filtered:"
           echo "${burrito_next_versions}"
 
-          build_count=$(echo -n "$burrito_next_versions" | wc -l)
+          build_count=$(echo -n "$burrito_next_versions" | grep -c "")
           echo "Build Count: ${build_count}"
           build_suffix=$(printf %02d $build_count)
           combined_patch_number=$((patch * 10000000000000000 + timestamp * 100 + build_count))
