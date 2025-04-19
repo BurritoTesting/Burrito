@@ -1,4 +1,4 @@
-name: publish
+honame: publish
 
 on:
   workflow_dispatch:
@@ -28,13 +28,13 @@ jobs:
           highest_version=$(echo "$tags" | grep -E "burrito-[0-9]+\.[0-9]+\.[0-9]+" | sort --version-sort --reverse | head -n 1)
           
           version=${highest_version#burrito-}
-          
+          echo "${version}"
           IFS='.' read -r major minor patch <<< "$version"
           
           minor=$((minor + 1))
           patch='0'
           next_version="$major.$minor.$patch"
-          
+          echo "here"
           timestamp=$(TZ="America/Chicago" date +"%Y%m%d%H%M%S")
           # Other Timezones
           # TZ="America/New_York" date +"%Y%m%d%H%M%S"
@@ -44,7 +44,7 @@ jobs:
           
           burrito_next_tag_without_build_suffix="burrito-next-${next_version}-${timestamp}${build_suffix}"
           burrito_next_versions=$(echo "$tags" | grep "$burrito_next_tag_without_build_suffix")
-          
+          echo "here2"
           build_count=$(echo "$burrito_next_versions" | wc -l)
           build_suffix=$(printf %02d $build_count)
           combined_patch_number=$((patch * 10000000000000000 + timestamp * 100 + build_count))
