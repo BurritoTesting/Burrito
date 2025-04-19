@@ -13,7 +13,7 @@ on:
         required: true
 
 jobs:
-  get-version:
+  get_version:
     runs-on: ubuntu-latest
     steps:
       - name: Get Version Tags
@@ -48,23 +48,30 @@ jobs:
           build_count=$(echo -n "$burrito_next_versions" | wc -l)
           build_suffix=$(printf %02d $build_count)
           combined_patch_number=$((patch * 10000000000000000 + timestamp * 100 + build_count))
-          
-          
-          
-          echo "Burrito Version Tag: burrito-${next_version}"
-          echo "Burrito Release Name: Burrito ${next_version}"
+
+          echo "version_tag=burrito-${next_version}" >> $GITHUB_OUTPUT
+          echo "release_name=Burrito ${next_version}" >> $GITHUB_OUTPUT
+          echo "build_type=burrito" >> $GITHUB_OUTPUT
+          echo "major_version=${major}" >> $GITHUB_OUTPUT
+          echo "minor_version=${minor}" >> $GITHUB_OUTPUT
+          echo "patch_version=${patch}" >> $GITHUB_OUTPUT
+
+          # echo "Burrito Version Tag: burrito-${next_version}"
+          # echo "Burrito Release Name: Burrito ${next_version}"
           echo "Burrito Embedded Versions: ${major} ${minor} ${patch}"
           echo "Burrito Next Version Tag: ${burrito_next_tag_without_build_suffix}${build_suffix}"
           echo "Burrito Next Version Tag: Burrito-next ${next_version} (${timestamp}${build_suffix})"
           echo "Burrito Next Embedded Versions: ${major} ${minor} ${combined_patch_number}"
 
 
-  call-build:
-    needs: get-version
+  call_build:
+    needs: get_version
     uses: ./.github/workflows/main.yml
 
   publish:
-    needs: call-build
+    needs:
+      - call_build
+      - get_version
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -76,6 +83,16 @@ jobs:
         # This is failing for some reason
         #with:
         #  name: Burrito_Linux
+
+      - name: Versions
+        run: |
+          echo ${{ needs.get_version.outputs.version_tag }}
+          echo ${{ needs.get_version.outputs.release_name }}
+
+          echo ${{ needs.get_version.outputs.build_type }}
+          echo ${{ needs.get_version.outputs.major_version }}
+          echo ${{ needs.get_version.outputs.minor_version }}
+          echo ${{ needs.get_version.outputs.patch_version }}
 
       - name: Generate a random name
         id: version_number
