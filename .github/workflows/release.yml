@@ -16,12 +16,16 @@ jobs:
   get_version:
     runs-on: ubuntu-latest
     outputs:
-      result: ${{ steps.get-version-tags.outputs.res }}
+      version_tag: ${{ steps.get-version-tags.outputs.version_tag }}
+      release_name: ${{ steps.get-version-tags.outputs.release_name }}
+      build_type: ${{ steps.get-version-tags.outputs.build_type }}
+      major_version: ${{ steps.get-version-tags.outputs.major_version }}
+      minor_version: ${{ steps.get-version-tags.outputs.minor_version }}
+      patch_version: ${{ steps.get-version-tags.outputs.patch_version }}
     steps:
       - name: Get Version Tags
         id: get-version-tags
         run: |
-
           git init
           git remote add origin https://github.com/${{ github.repository }}.git
           tags=$(git ls-remote --tags origin | awk -F/ '{print $3}' | grep -v '\^{}')
@@ -31,7 +35,7 @@ jobs:
           highest_version=$(echo "$tags" | grep -E "burrito-[0-9]+\.[0-9]+\.[0-9]+" | sort --version-sort --reverse | head -n 1)
           
           version=${highest_version#burrito-}
-          
+
           IFS='.' read -r major minor patch <<< "$version"
           
           minor=$((minor + 1))
