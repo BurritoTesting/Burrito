@@ -118,6 +118,10 @@ jobs:
         #with:
         #  name: Burrito_Linux
 
+      - name: ls files
+        run: |
+          ls -al Burrito_Linux/
+
       - name: Versions
         run: |
           echo "${{ needs.get_version.outputs.version_tag }}"
@@ -138,22 +142,7 @@ jobs:
       - name: Zip up the download
         run: |
           mkdir -p "downloaded-artifact"
-          zip -r "downloaded-artifact/${{ needs.get_version.outputs.version_tag }}.zip" Burrito_Linux
-
-      # - name: Listfiles
-      #   run: |
-      #     tree .
-      #     pwd
-
-      # - name: Create a fake artifact
-      #   run: |
-      #     mkdir -p "downloaded-artifact"
-      #     echo "Hello World" > downloaded-artifact/my_special_artifact.zip
-
-      # - name: Tag the current commit with this tag
-      #   run: |
-      #     git tag -a "${$VERSION_NUMBER}" -m "Build ${$VERSION_NUMBER}" ${{ github.sha }}
-      #     git push origin "${$VERSION_NUMBER}"
+          zip -r "downloaded-artifact/${{ needs.get_version.outputs.version_tag }}.zip" Burrito_Linux/*
 
       - name: Upload a new release
         uses: actions/github-script@v7
