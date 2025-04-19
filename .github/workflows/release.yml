@@ -123,6 +123,7 @@ jobs:
       # https://github.com/actions/download-artifact/issues/14
       - name: Fix Executable Bits
         run: |
+          cd Burrito_Linux
           chmod +x burrito.x86_64
           chmod +x xml_converter
 
