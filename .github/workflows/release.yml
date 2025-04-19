@@ -53,7 +53,11 @@ jobs:
           burrito_next_versions=$(echo "$tags" | grep "$burrito_next_tag_without_build_suffix" | cat)
 
           echo "Version without suffix: ${burrito_next_tag_without_build_suffix}"
-          
+          echo "Tags:"
+          echo "${tags}"
+          echo "Filtered:"
+          echo "${burrito_next_versions}"
+
           build_count=$(echo -n "$burrito_next_versions" | wc -l)
           echo "Build Count: ${build_count}"
           build_suffix=$(printf %02d $build_count)
