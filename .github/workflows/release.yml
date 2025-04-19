@@ -28,34 +28,36 @@ jobs:
           highest_version=$(echo "$tags" | grep -E "burrito-[0-9]+\.[0-9]+\.[0-9]+" | sort --version-sort --reverse | head -n 1)
           
           version=${highest_version#burrito-}
-          echo "${version}"
+          
           IFS='.' read -r major minor patch <<< "$version"
           
           minor=$((minor + 1))
           patch='0'
           next_version="$major.$minor.$patch"
-          echo "here"
-          timestamp=$(TZ="America/Chicago" date +"%Y%m%d%H%M%S")
-          echo "here 2.1"
+          
+          timestamp=$(TZ="America/Chicago" date +"%Y%m%d")
           # Other Timezones
           # TZ="America/New_York" date +"%Y%m%d%H%M%S"
           # TZ="America/Chicago" date +"%Y%m%d%H%M%S"
           # TZ="America/Denver" date +"%Y%m%d%H%M%S"
           # TZ="America/Los_Angeles" date +"%Y%m%d%H%M%S"
-          echo "here2.4"
+          
           burrito_next_tag_without_build_suffix="burrito-next-${next_version}-${timestamp}${build_suffix}"
-          burrito_next_versions=$(echo "$tags" | grep "$burrito_next_tag_without_build_suffix")
-          echo "here2"
-          build_count=$(echo "$burrito_next_versions" | wc -l)
+          burrito_next_versions=$(echo "$tags" | grep "$burrito_next_tag_without_build_suffix" | cat)
+          
+          build_count=$(echo -n "$burrito_next_versions" | wc -l)
           build_suffix=$(printf %02d $build_count)
           combined_patch_number=$((patch * 10000000000000000 + timestamp * 100 + build_count))
-
+          
+          
+          
           echo "Burrito Version Tag: burrito-${next_version}"
           echo "Burrito Release Name: Burrito ${next_version}"
           echo "Burrito Embedded Versions: ${major} ${minor} ${patch}"
-          echo "Burrito Next Version Tag: ${burrito_next_tag_without_build_suffix}"
+          echo "Burrito Next Version Tag: ${burrito_next_tag_without_build_suffix}${build_suffix}"
           echo "Burrito Next Version Tag: Burrito-next ${next_version} (${timestamp}${build_suffix})"
           echo "Burrito Next Embedded Versions: ${major} ${minor} ${combined_patch_number}"
+
 
   call-build:
     needs: get-version
