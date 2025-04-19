@@ -128,7 +128,7 @@ jobs:
       - name: Zip up the download
         run: |
           mkdir -p "downloaded-artifact"
-          zip -r "downloaded-artifact/${{ needs.get_version.outputs.version_tag }}" Burrito_Linux
+          zip -r "downloaded-artifact/${{ needs.get_version.outputs.version_tag }}.zip" Burrito_Linux
 
       # - name: Listfiles
       #   run: |
